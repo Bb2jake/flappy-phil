@@ -11,8 +11,11 @@ public class ScrollingObject : MonoBehaviour {
 	}
 
 	void Update () {
-		if (GameControl.instance.gameOver) {
+		if (GameControl.instance.gameOver || GameControl.instance.gamePaused) {
 			rb2d.velocity = Vector2.zero;
-		}
-	}
+		} else if (rb2d.velocity == Vector2.zero)
+		{
+		    rb2d.velocity = new Vector2(GameControl.instance.scrollSpeed, 0);
+        }
+    }
 }

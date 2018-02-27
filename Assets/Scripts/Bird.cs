@@ -9,15 +9,23 @@ public class Bird : MonoBehaviour {
 	private Rigidbody2D rb2d;
 	private Animator anim;
 
-	void Start () {
+    private void Start () {
 		rb2d = GetComponent<Rigidbody2D> ();
 		anim = GetComponent<Animator> ();
 	}
 
-	void Update () {
+    private void Update () {
 		if (isDead) {
 			return;
 		}
+
+	    if (GameControl.instance.gamePaused)
+	    {
+	        if (rb2d.simulated)
+	            rb2d.simulated = false;
+	        return;
+	    } else if (!rb2d.simulated)
+	        rb2d.simulated = true;
 
 		if (Input.GetMouseButtonDown (0)) {
 			rb2d.velocity = Vector2.zero;
@@ -26,7 +34,7 @@ public class Bird : MonoBehaviour {
 		}
 	}
 
-	void OnCollisionEnter2D (Collision2D other) {
+    private void OnCollisionEnter2D (Collision2D other) {
 		if (other.gameObject.tag == "Sky") {
 			return;
 		}

@@ -9,22 +9,41 @@ public class GameControl : MonoBehaviour {
 
 	public GameObject gameOverText;
 	public Text scoreText;
-	[HideInInspector]
-	public bool gameOver = false;
+    public GameObject startupBackground;
+    public Text startupTimerText;
+	[HideInInspector] public bool gameOver = false;
 	public float scrollSpeed = -1.5f;
+    [HideInInspector] public bool gamePaused = false;
 
 	private int score = 0;
 
-	void Awake () {
+	private void Awake () {
 		if (!instance) {
 			instance = this;
 		} else if (instance != this) {
 			Destroy (gameObject);
 		}
+
+	    StartCoroutine(StartTimer());
+	}
+
+	private IEnumerator StartTimer() {
+		startupBackground.SetActive(true);
+	    gamePaused = true;
+	    var timer = 3;
+	    while (timer > 0)
+	    {
+	        startupTimerText.text = timer.ToString();
+	        timer--;
+            yield return new WaitForSeconds(1);
+	    }
+
+	    gamePaused = false;
+        startupBackground.SetActive(false);
 	}
 	
 	// Update is called once per frame
-	void Update () {
+    private void Update () {
 		if (gameOver && Input.GetMouseButtonDown (0)) {
 			SceneManager.LoadScene (SceneManager.GetActiveScene ().buildIndex);
 		}
